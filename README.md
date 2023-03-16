@@ -1,6 +1,13 @@
 # workflow-archiving-test
 
-## Changes from the supplied values.yaml
+# Pre-requisites
+In order to run this locally, you will need [k3d](https://k3d.io/) installed, as well as kubectl and Helm.
+
+You can replace k3d with something else and things will probably just work. Just sub out the `k3d` commands for whatever you want to use.
+
+# Note: changes from the supplied values.yaml
+
+Due to the redacted nature of the supplied values.yaml, I've had to make a few changes to get it to work:
 
 - crds.install set to 'true' otherwise workflows won't work.
 - sso block commented out as we don't have access to your SSO provider.
@@ -11,7 +18,6 @@
 - serviceMonitor.enabled set to false (to save us installing prometheus)
 - add `workflow.rbac.create: true` otherwise nothing would deploy.
 - set server to secure.true
-
 
 I have kept your provided values at `argo-workflows/orig-values.yaml` so that you can diff between what you supplied and what I've changed.
 
