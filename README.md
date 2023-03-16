@@ -97,6 +97,6 @@ You can connect to the database to see the archiving. Minio is also available if
 
 
 # Connecting to the Postgres DB
-| Name           | Command                                                                 | username   | password               |
-|----------------|-------------------------------------------------------------------------|------------|------------------------|
-| Postgres       | `kubectl -n postgres port-forward --address 0.0.0.0 svc/minio 5432:5432`| `postgres` | `sup3rs3cr3tp4ssw0rd1` |
+| Name           | Command                                                                    | username   | password               |
+|----------------|----------------------------------------------------------------------------|------------|------------------------|
+| Postgres       | `kubectl -n postgres port-forward --address 0.0.0.0 svc/postgres 5432:5432`| `postgres` | `sup3rs3cr3tp4ssw0rd1` |
