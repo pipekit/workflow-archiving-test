@@ -26,6 +26,7 @@ I have kept your provided values at `argo-workflows/orig-values.yaml` so that yo
 kubectl create namespace minio && kubectl -n minio apply -f minio
 kubectl create namespace postgres && kubectl -n postgres apply -f postgres
 ```
+These are configured to automatically create appropriate buckets and databases.
 
 ### Apply the minio and postgres secrets to the argo namespace:
     
@@ -63,7 +64,8 @@ kubectl -n argo create -f hello-world/hello-world.yaml
 ```
 
 ### Check the workflow has completed
-    
+
+You will probably want to wait a minute or so before running it. If it returns no values, the workflow hasn't completed yet.
 ```bash
 kubectl get workflow -n argo -l workflows.argoproj.io/completed=true -o name
 ```
