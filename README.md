@@ -85,7 +85,7 @@ Open the workflows UI in your browser (see below for port-forwarding instruction
 ## Additional checks
 You can connect to the database to see the archiving. Minio is also available if you want to confirm log archiving.
 
-# delete the cluster
+# Delete the cluster
 `k3d cluster delete workflow-archiving`
 
 
