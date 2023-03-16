@@ -1,0 +1,100 @@
+argo-workflows:
+  singleNamespace: true
+  createAggregateRoles: false
+  crds:
+    install: true
+  controller:
+    replicas: 2
+    clusterWorkflowTemplates:
+      enabled: false
+    image: {}
+      # registry: our-harbor-cache/quay.io
+    metricsConfig:
+      enabled: true
+    telemetryConfig:
+      enabled: true
+    serviceMonitor:
+      enabled: false
+    workflowDefaults:
+      spec:
+        serviceAccountName: argo-workflow
+        ttlStrategy:
+          secondsAfterCompletion: 84600 # 1 day
+    workflowNamespaces:
+      - argo
+      - default
+    persistence:
+      archive: true
+      postgresql:
+        host: postgres.postgres.svc.cluster.local
+        port: 5432
+        database: workflow
+        tableName: argo_workflows
+        userNameSecret:
+          name: argo-postgres-config
+          key: username
+        passwordSecret:
+          name: argo-postgres-config
+          key: password
+        ssl: false
+        sslmode: disable
+  executor:
+    image: {}
+      # registry: our-harbor-cache/quay.io
+  server:
+    secure: true
+    replicas: 2
+    clusterWorkflowTemplates:
+      enabled: false
+    image: {}
+      # registry: our-harbor-cache/quay.io
+    ingress:
+      enabled: false
+      hosts:
+      - redacted
+      tls:
+      - hosts:
+        - redacted
+    extraArgs:
+    # - --auth-mode=sso
+    - --auth-mode=server
+    # extraEnv:
+    # - name: SSO_DELEGATE_RBAC_TO_NAMESPACE
+    #   value: 'true'
+    # sso:
+    #   issuer: redacted
+    #   redirectURL: redacted
+    #   scopes:
+    #   - profile
+    #   - groups
+    #   - email
+    #   - offline_access
+    #   - openid
+    #   clientId:
+    #     name: argo-workflows-oidc
+    #     key: CLIENT_ID
+    #   clientSecret:
+    #     name: argo-workflows-oidc
+    #     key: CLIENT_SECRET
+    #   rbac:
+    #     enabled: true
+  useDefaultArtifactRepo: true
+  artifactRepository:
+    archiveLogs: true
+    s3:
+      bucket: workflows
+      endpoint: minio.minio.svc.cluster.local:9000
+      insecure: true
+      accessKeySecret:
+        name: minio-creds
+        key: accesskey
+      secretKeySecret:
+        name: minio-creds
+        key: secretkey
+  workflow:
+    serviceAccount:
+      create: true
+    rbac:
+      # -- Adds Role and RoleBinding for the above specified service account to be able to run workflows.
+      # A Role and Rolebinding pair is also created for each namespace in controller.workflowNamespaces (see below)
+      create: true

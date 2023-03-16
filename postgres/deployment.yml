@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - command:
+        - sh
+        - -c
+        - |
+          echo IyEvYmluL2Jhc2gKc2V0IC1lCgpwc3FsIC12IE9OX0VSUk9SX1NUT1A9MSAtLXVzZXJuYW1lICIkUE9TVEdSRVNfVVNFUiIgLS1kYm5hbWUgIiRQT1NUR1JFU19EQiIgPDwtRU9TUUwKICAgIENSRUFURSBEQVRBQkFTRSB3b3JrZmxvdzsKICAgIENSRUFURSBEQVRBQkFTRSBwaXBla2l0OwogICAgQUxURVIgU1lTVEVNIFNFVCBtYXhfY29ubmVjdGlvbnMgPSA1MDA7CkVPU1FMCg== | base64 -d > /docker-entrypoint-initdb.d/init_dbs.sh;
+          chmod +x /docker-entrypoint-initdb.d/init_dbs.sh;
+          docker-entrypoint.sh postgres
+        env:
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: sup3rs3cr3tp4ssw0rd1
+        image: postgres:14.4
+        name: postgres
+        ports:
+        - containerPort: 5432
+          name: postgres
+          protocol: TCP

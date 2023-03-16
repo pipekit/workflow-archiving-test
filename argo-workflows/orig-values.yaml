@@ -1,0 +1,94 @@
+argo-workflows:
+  singleNamespace: true
+  createAggregateRoles: false
+  crds:
+    install: false
+  controller:
+    replicas: 2
+    clusterWorkflowTemplates:
+      enabled: false
+    image: {}
+      # registry: our-harbor-cache/quay.io
+    metricsConfig:
+      enabled: true
+    telemetryConfig:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+    workflowDefaults:
+      spec:
+        serviceAccountName: argo-workflow
+        ttlStrategy:
+          secondsAfterCompletion: 84600 # 1 day
+    workflowNamespaces:
+    - redacted
+    persistence:
+      archive: true
+      postgresql:
+        host: redacted
+        port: 5432
+        database: argo_workflows
+        tableName: argo_workflows
+        userNameSecret:
+          name: redacted
+          key: username
+        passwordSecret:
+          name: redacted
+          key: password
+        ssl: true
+        sslmode: require
+  executor:
+    image: {}
+      # registry: our-harbor-cache/quay.io
+  server:
+    replicas: 2
+    clusterWorkflowTemplates:
+      enabled: false
+    image: {}
+      # registry: our-harbor-cache/quay.io
+    ingress:
+      enabled: true
+      hosts:
+      - redacted
+      tls:
+      - hosts:
+        - redacted
+    extraArgs:
+    - --auth-mode=sso
+    - --auth-mode=client
+    extraEnv:
+    - name: SSO_DELEGATE_RBAC_TO_NAMESPACE
+      value: 'true'
+    sso:
+      issuer: redacted
+      redirectURL: redacted
+      scopes:
+      - profile
+      - groups
+      - email
+      - offline_access
+      - openid
+      clientId:
+        name: argo-workflows-oidc
+        key: CLIENT_ID
+      clientSecret:
+        name: argo-workflows-oidc
+        key: CLIENT_SECRET
+      rbac:
+        enabled: true
+  useDefaultArtifactRepo: true
+  artifactRepository:
+    archiveLogs: true
+    s3:
+      accessKeySecret:
+        name: redacted
+        key: AWS_ACCESS_KEY_ID
+      secretKeySecret:
+        name: redacted
+        key: AWS_SECRET_ACCESS_KEY
+      bucket: redacted
+      endpoint: redacted
+      region: redacted
+  workflow:
+    serviceAccount:
+      create: true
